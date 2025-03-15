@@ -13,11 +13,31 @@ namespace ProcessorAffinityMgr.Service
 
         private void ProcessWatcher_ProcessStarted(object sender, ProcessWatcher.ProcessStartedInfoEventArgs e)
         {
-            if (ProcessAffinityMgrService.PCoreProcesses.Contains(e.Name, StringComparer.OrdinalIgnoreCase))
+            
+            var matchingRules = ProcessAffinityMgrService.Config.ProcessRules
+                .Where(rule => rule.ProcessName.Equals(e.Name, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(rule => rule.Arguments.Length) 
+                .ToList();
+
+            foreach (var rule in matchingRules)
             {
-                SetProcessAffinity(e.Id, ProcessAffinityMgrService.PCoreAffinityMask);
-                ProcessAffinityMgrService.ServiceEventLog.WriteEntry(
-                    $"P-Core-Affinity set for {e.Name} (PID: {e.Id}).");
+                if (rule.Arguments == "" || e.CommandLine.ToLower().Contains(rule.Arguments.ToLower()))
+                {
+                    ProcessAffinityMgrService.ServiceEventLog.WriteEntry($"Set processor-affinity for {e.Name} (PID: {e.Id}) to: {rule.CoreType}", EventLogEntryType.Information);
+
+                    switch (rule.CoreType)
+                    {
+                        case "p-core": 
+                            SetProcessAffinity(e.Id, ProcessAffinityMgrService.PCoreAffinityMask);
+                            break;
+                        
+                        case "e-core":
+                            SetProcessAffinity(e.Id, ProcessAffinityMgrService.ECoreAffinityMask);
+                            break;
+                    }
+
+                    return;
+                }
             }
         }
 

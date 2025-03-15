@@ -12,7 +12,7 @@ namespace ProcessorAffinityMgr.Service
         public static IntPtr PCoreAffinityMask = IntPtr.Zero;
         public static IntPtr ECoreAffinityMask = IntPtr.Zero;
 
-        public static List<string> PCoreProcesses = new List<string>();
+        public static AffinityMgrConfig Config;
 
         public static ProcessWatcher ProcessWatcher;
         public static AffinityManager AffinityManager;
@@ -28,6 +28,8 @@ namespace ProcessorAffinityMgr.Service
             EventLog.Source = "ProcessAffinityMgrService";
             ServiceEventLog = EventLog;
 
+            ConfigWatcher = new ConfigWatcher();
+
             if (ProcessorInformationReader.GetCoreAffinityMasks())
             {
                 EventLog.WriteEntry("No P-Cores detected. Service will stop.", EventLogEntryType.Error);
@@ -36,7 +38,6 @@ namespace ProcessorAffinityMgr.Service
             }
 
             ProcessWatcher = new ProcessWatcher();
-            ConfigWatcher = new ConfigWatcher();
             AffinityManager = new AffinityManager();
         }
 

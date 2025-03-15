@@ -43,13 +43,8 @@ namespace ProcessorAffinityMgr.Service
                 {
                     var json = File.ReadAllText(ConfigFilePath);
 
-                    var config = JsonConvert.DeserializeObject<ConfigData>(json);
-                    if (config?.Processes != null)
-                    {
-                        ProcessAffinityMgrService.PCoreProcesses = config.Processes;
-                        ProcessAffinityMgrService.ServiceEventLog.WriteEntry(
-                            $"config.json loaded: {string.Join(", ", config.Processes)}");
-                    }
+                    ProcessAffinityMgrService.Config = JsonConvert.DeserializeObject<AffinityMgrConfig>(json);
+                    ProcessAffinityMgrService.ServiceEventLog.WriteEntry("config.json loaded.");
                 }
                 else
                 {
@@ -63,10 +58,19 @@ namespace ProcessorAffinityMgr.Service
                     EventLogEntryType.Error);
             }
         }
+    }
 
-        private class ConfigData
-        {
-            public List<string> Processes { get; set; }
-        }
+    public class AffinityMgrConfig
+    {
+        public int PCoreCount { get; set; }
+        public List<ProcessRule> ProcessRules { get; set; }
+
+    }
+
+    public class ProcessRule
+    {
+        public string ProcessName { get; set; }
+        public string Arguments { get; set; } = "";
+        public string CoreType { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace ProcessorAffinityMgr.Service
 
         public ProcessWatcher()
         {
-            _watcher = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
+            _watcher = new ManagementEventWatcher("SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'");
             _watcher.EventArrived += OnProcessStarted;
             _watcher.Start();
 
@@ -28,10 +28,13 @@ namespace ProcessorAffinityMgr.Service
 
         private void OnProcessStarted(object sender, EventArrivedEventArgs e)
         {
+            var process = (ManagementBaseObject)e.NewEvent["TargetInstance"];
+
             var processStartedInfo = new ProcessStartedInfoEventArgs
             {
-                Id = Convert.ToInt32(e.NewEvent["ProcessID"]),
-                Name = e.NewEvent["ProcessName"].ToString()
+                Id = Convert.ToInt32(process["ProcessId"]),
+                Name = process["Name"].ToString(),
+                CommandLine = process["CommandLine"]?.ToString() ?? ""
             };
 
             ProcessStarted?.Invoke(this, processStartedInfo);
@@ -42,6 +45,8 @@ namespace ProcessorAffinityMgr.Service
             public int Id { get; set; }
 
             public string Name { get; set; }
+
+            public string CommandLine { get; set; }
         }
     }
 }

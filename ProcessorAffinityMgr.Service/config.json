@@ -1,7 +1,25 @@
 {
-  "Processes": [
-    "notepad.exe",
-    "calc.exe",
-    "mspaint.exe"
+  "PCoreCount": 12,
+  "ProcessRules": [
+    {
+      "ProcessName": "chrome.exe",
+      "Arguments": "--incognito",
+      "CoreType": "p-core"
+    },
+    {
+      "ProcessName": "chrome.exe",
+      "Arguments": "--disable-gpu",
+      "CoreType": "e-core"
+    },
+    {
+      "ProcessName": "notepad.exe",
+      "Arguments": "",
+      "CoreType": "e-core"
+    },
+    {
+      "ProcessName": "vlc.exe",
+      "Arguments": "",
+      "CoreType": "p-core"
+    }
   ]
 }
