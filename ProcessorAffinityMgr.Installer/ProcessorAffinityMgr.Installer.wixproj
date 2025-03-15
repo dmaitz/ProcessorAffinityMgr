@@ -1,0 +1,17 @@
+﻿<Project Sdk="WixToolset.Sdk/5.0.2">
+
+	<PropertyGroup>
+		<OutputName>ProcessorAffinityMgr</OutputName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ProcessorAffinityMgr.Service\ProcessorAffinityMgr.Service.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="License.rtf" />
+	</ItemGroup>
+
+</Project>

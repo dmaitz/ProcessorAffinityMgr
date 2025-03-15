@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?define ProdVersion="!(bind.fileVersion.filServiceEXE)"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+	<Package Name="ProcessorAffinityMgr $(var.ProdVersion)" Version="$(var.ProdVersion)" Manufacturer="dmaitz" UpgradeCode="f7ccd7b7-739c-44d6-8524-72bf2235ee93" InstallerVersion="500">
+
+		<SummaryInformation Description="ProcessorAffinityMgr" />
+
+		<Media Id="1" Cabinet="Cab1.cab" EmbedCab="yes" CompressionLevel="high" />
+
+		<MajorUpgrade AllowDowngrades="yes" />
+
+		<ui:WixUI Id="WixUI_Minimal" />
+		<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+		<Feature Id="ProcessorAffinityMgr" Title="ProcessorAffinityMgr Service" Level="1">
+			<ComponentRef Id="ProcessorAffinityMgrService" />
+			<ComponentRef Id="ProcessorAffinityMgrConfig" />
+			<ComponentRef Id="NewtonsoftDLL" />
+			<ComponentRef Id="License" />
+		</Feature>
+
+		<StandardDirectory Id="ProgramFiles64Folder">
+
+			<Directory Id="INSTALLDIR" Name="ProcessorAffinityMgr">
+				<Component Id="ProcessorAffinityMgrService" Guid="{42CBDCC2-6FEC-41E5-BDFC-B80C2B8A188B}">
+					<File Id="filServiceEXE" Name="ProcessorAffinityMgr.Service.exe" Source="$(var.ProcessorAffinityMgr.Service.TargetDir)$(var.ProcessorAffinityMgr.Service.TargetName).exe" />
+					<ServiceInstall Id="WindowsServices" Name="ProcessorAffinityMgr" DisplayName="ProcessorAffinityMgr Service" Description="ProcessorAffinityMgr Service" Start="auto" Type="ownProcess" ErrorControl="normal" Account="LocalSystem" Vital="yes" Interactive="no" />
+					<ServiceControl Id="WindowsServices" Name="ProcessorAffinityMgr" Start="install" Stop="both" Remove="uninstall" Wait="no" />
+				</Component>
+				<Component Id="ProcessorAffinityMgrConfig" Guid="{FA13ADAF-708F-4C9E-A221-61804AF483DF}" NeverOverwrite="yes" Permanent="yes">
+					<File Id="filConfigJson" Name="config.json" Source="$(var.ProcessorAffinityMgr.Service.ProjectDir)config.json" />
+				</Component>
+				<Component Id="NewtonsoftDLL" Guid="{1B9206BD-0885-4353-B82D-EB52A6C0C666}">
+					<File Id="filNewtonsoftJsonDLL" Name="Newtonsoft.Json.dll" Source="$(var.ProcessorAffinityMgr.Service.TargetDir)Newtonsoft.Json.dll" />
+				</Component>
+				<Component Id="License" Guid="{7F60F45E-76A5-43E2-A666-8BDE962EDF5F}">
+					<File Id="filLicense" Name="License.txt" Source="$(var.ProcessorAffinityMgr.Service.ProjectDir)\..\LICENSE" />
+				</Component>
+			</Directory>
+
+		</StandardDirectory>
+
+	</Package>
+</Wix>
