@@ -9,7 +9,7 @@ namespace ProcessorAffinityMgr.Service
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new ProcessAffinityService()
+                new ProcessAffinityMgrService()
             };
             ServiceBase.Run(ServicesToRun);
         }

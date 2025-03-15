@@ -44,12 +44,13 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AffinityManager.cs" />
+    <Compile Include="ConfigWatcher.cs" />
     <Compile Include="ProcessAffinityService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProcessAffinityService.Designer.cs">
-      <DependentUpon>ProcessAffinityService.cs</DependentUpon>
-    </Compile>
+    <Compile Include="ProcessorInformationReader.cs" />
+    <Compile Include="ProcessWatcher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
