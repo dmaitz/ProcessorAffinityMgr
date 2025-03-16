@@ -1,5 +1,5 @@
 {
-  "PCoreCount": 12,
+  "PCoreCount": 0,
   "ProcessRules": [
     {
       "ProcessName": "chrome.exe",
